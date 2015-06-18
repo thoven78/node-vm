@@ -1,0 +1,48 @@
+- hosts: all
+  user: root
+  sudo: yes
+  vars_files:
+    - ./settings.yml
+
+  tasks:
+
+    - name: bash_profile
+      template:
+        src: ./templates/bash_profile.j2
+        dest: /home/vagrant/.bash_profile
+
+    - name: add git repository
+      apt_repository:
+        repo: ppa:git-core/ppa
+
+    - name: add redis repository
+      apt_repository:
+        repo: ppa:chris-lea/redis-server
+
+    - name: install required packages
+      apt:
+        pkg: "{{item}}"
+        state: present
+        update_cache: yes
+      with_items:
+        - software-properties-common
+        - curl
+        - git
+        - redis-server
+
+    - name: update all packages
+      apt:
+        upgrade: dist
+
+    - name: start redis
+      service:
+        name: redis-server
+        state: started
+        enabled: yes
+
+  handlers:
+
+    - name: restart redis
+      service:
+        name: redis-server
+        state: restarted
