@@ -49,9 +49,16 @@ cd /home/vagrant && rm -rf node_modules
 # Installing Node.JS
 echo 'Installing Node.JS...'
 
-nvm install 0.12.4
+nvm install node
 echo 'Use Node 0.12.4...'
 
-nvm use 0.12.4
+#nvm use 0.12.4
 
 nvm alias default stable
+
+echo 'Fixing nvm ls-remote...'
+sed -i 's/curl -q $*/curl -k $/' .nvm/nvm.sh
+
+echo 'Update nvm permision...'
+# Because we changed the nvm.sh file we have to update the permision
+sudo chown -R vagrant:vagrant /home/vagrant/.nvm
