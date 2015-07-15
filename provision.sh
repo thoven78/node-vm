@@ -50,9 +50,7 @@ cd /home/vagrant && rm -rf node_modules
 echo 'Installing Node.JS...'
 
 nvm install node
-echo 'Use Node 0.12.4...'
-
-#nvm use 0.12.4
+echo 'Use the lastest version of Node'
 
 nvm alias default stable
 
@@ -62,3 +60,8 @@ sed -i 's/curl -q $*/curl -k $/' .nvm/nvm.sh
 echo 'Update nvm permision...'
 # Because we changed the nvm.sh file we have to update the permision
 sudo chown -R vagrant:vagrant /home/vagrant/.nvm
+
+echo 'Setting TimeZone...'
+export tz=`wget -qO - http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p'` &&  timedatectl set-timezone $tz
+export tz=`timedatectl status| grep Timezone | awk '{print $2}'`
+echo 'TimeZone set to $tz'
